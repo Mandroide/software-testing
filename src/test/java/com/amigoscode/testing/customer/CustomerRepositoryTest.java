@@ -20,7 +20,6 @@ class CustomerRepositoryTest {
 
     @Autowired
     private CustomerRepository underTest;
-    private String name;
 
     @Test
     void findCustomerByPhoneNumber_WhenNumberDoesNotExist_NoCustomerFound() {

@@ -83,22 +83,4 @@ class CustomerRegistrationServiceTest {
         then(repository).shouldHaveNoMoreInteractions();
     }
 
-//    @Test
-//    void registerNewCustomer_PayloadRequiredFieldsAreNull_DoNothing() {
-//        // Given
-//        UUID id = UUID.randomUUID();
-//        CustomerRegistrationRequest request = new CustomerRegistrationRequest(
-//                new Customer(UUID.randomUUID(), null, null)
-//        );
-//        // Another customer with phoneNumber found.
-//        given(repository.findCustomerByPhoneNumber(phoneNumber)).willReturn(
-//                Optional.of(new Customer(
-//                        UUID.randomUUID(),"name", phoneNumber)));
-//
-//
-//        // When and Then
-//        assertThatExceptionOfType(Exception.class).isThrownBy(() -> underTest.registerNewCustomer(request));
-//        then(repository).should().findCustomerByPhoneNumber(phoneNumber);
-//        then(repository).shouldHaveNoMoreInteractions();
-//    }
 }

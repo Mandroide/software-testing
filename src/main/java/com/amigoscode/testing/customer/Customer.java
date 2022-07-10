@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@JsonIgnoreProperties(value = {"id"}, allowGetters = true)
+@JsonIgnoreProperties(allowGetters = true)
 public class Customer {
 
     @Id
@@ -72,5 +72,14 @@ public class Customer {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
     }
 }

@@ -26,6 +26,10 @@ public class PaymentService {
         this.cardPaymentCharger = cardPaymentCharger;
     }
 
+    List<Payment> listPayments(UUID customerId){
+        return repository.findPaymentsByCustomerId(customerId);
+    }
+
     void chargeCard(UUID customerId, PaymentRequest request){
         // 1. Does customer exists if not throw
         // 2. Do we support the currency if not throw
