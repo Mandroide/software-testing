@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
@@ -24,17 +25,22 @@ class PaymentServiceTest {
     private PaymentRepository paymentRepository;
     @Mock
     private CardPaymentCharger cardPaymentCharger;
+    @Mock
+    private SMSSender smsSender;
 
     private PaymentService underTest;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        underTest = new PaymentService(customerRepository, paymentRepository, cardPaymentCharger);
+        underTest = new PaymentService(customerRepository,
+                paymentRepository,
+                cardPaymentCharger,
+                smsSender);
     }
 
     @Test
-    void chargeCard_CustomerExistsAndCurrencySupportedAndCardIsDebited_PaymentSucessful() {
+    void chargeCard_CustomerExistsAndCurrencySupportedAndCardIsDebited_PaymentSuccessful() {
         // Given
         UUID customerId = UUID.randomUUID();
         // Customer Exists
@@ -51,6 +57,9 @@ class PaymentServiceTest {
                 request.getPayment().getCurrency(),
                 request.getPayment().getDescription()
                 )).willReturn(new CardPaymentCharge(true));
+
+        // ... SMS is delivered successfully
+        given(smsSender.sendSMS(any(), any())).willReturn(new SMSSent(true));
 
         // When
         underTest.chargeCard(customerId, request);

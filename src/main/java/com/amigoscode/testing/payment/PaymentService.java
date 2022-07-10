@@ -17,13 +17,18 @@ public class PaymentService {
     private final CustomerRepository customerRepository;
     private final PaymentRepository repository;
     private final CardPaymentCharger cardPaymentCharger;
+    private final SMSSender smsSender;
 
 
     @Autowired
-    public PaymentService(CustomerRepository customerRepository, PaymentRepository repository, CardPaymentCharger cardPaymentCharger) {
+    public PaymentService(CustomerRepository customerRepository,
+                          PaymentRepository repository,
+                          CardPaymentCharger cardPaymentCharger,
+                          SMSSender smsSender) {
         this.customerRepository = customerRepository;
         this.repository = repository;
         this.cardPaymentCharger = cardPaymentCharger;
+        this.smsSender = smsSender;
     }
 
     List<Payment> listPayments(UUID customerId){
@@ -31,12 +36,12 @@ public class PaymentService {
     }
 
     void chargeCard(UUID customerId, PaymentRequest request){
-        // 1. Does customer exists if not throw
+        // 1. Does customer exist if not throw
         // 2. Do we support the currency if not throw
         // 3. Charge card
         // 4. If not debited throw
         // 5. Insert Payment
-        // 6. TODO: send sms
+        // 6. Send SMS
         Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
         Payment payment = request.getPayment();
         String msg = "";
@@ -50,6 +55,14 @@ public class PaymentService {
                 if (paymentCharge.isCardDebited()){
                     request.getPayment().setCustomerId(customerId);
                     repository.save(payment);
+                    Customer customer = optionalCustomer.get();
+                    SMSSent smsSent = smsSender.sendSMS(
+                            customer.getPhoneNumber(),
+                            "Payment done");
+                    if (!smsSent.isSent()){
+                        msg = "SMS to " + customer.getPhoneNumber()
+                                + " could not be sent.";
+                    }
                 } else {
                     msg = String.format(
                             "Card no debited for %s %s",

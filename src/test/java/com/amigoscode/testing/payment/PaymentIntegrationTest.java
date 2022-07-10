@@ -30,7 +30,7 @@ public class PaymentIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    void createPaymentSucessfully() throws Exception {
+    void createPaymentSuccessfully() throws Exception {
         // Given a customer
         UUID customerId = UUID.randomUUID();
         String phoneNumber = "+447000000000";
@@ -62,7 +62,6 @@ public class PaymentIntegrationTest {
                 .accept(MimeTypeUtils.APPLICATION_JSON_VALUE));
 
         resultActions.andExpect(status().isOk());
-        // TODO: Ensure SMS is delivered
     }
 
     private String objectToJson(Object obj) {
